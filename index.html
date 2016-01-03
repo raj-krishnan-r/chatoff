@@ -1,0 +1,25 @@
+<script src = "/socket.io/socket.io.js"></script>
+<script>
+	var socket = io();
+	var socket1 = io.connect('/my');
+
+</script>
+<input type="text" id="username"><input onclick="username()" type="button" value="register"><br>
+<textarea style="display:none;" id="write"></textarea>
+<button onclick="release()">Release</button>
+<script>
+	function release()
+	{
+		var data=document.getElementById('write').value;
+		socket.emit('package',data);
+	}
+	function username()
+	{
+		var data=document.getElementById('username').value;
+		socket.emit('username',data);	
+		alert('Data Pushed');
+	}
+	socket1.on('hello',function(data){
+		console.log('De');
+	});
+	</script>
