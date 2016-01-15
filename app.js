@@ -6,7 +6,7 @@ app.listen(8080,function()
 	{console.log('Server Up at port 8080');}
 		);
 
-//Rooms Objectsv
+//Rooms Objects
 var item= Array();
 var people = function(id,username)
 {
@@ -37,11 +37,16 @@ res.end(data);
 }
 io.on('connection',function(socket){
 console.log('Client Connected');
+socket.on('msg',function(data){
+
+	//console.log(data.rid+' : '+data.msg);
+	io.to(data.rid).emit('incoming',data.msg);
+});
 socket.on('username',function(data){
-	console.log(socket.id);
-	console.log('Up and Running');
+//console.log('Up and Running');
 var thing = new people(socket.id,data);
 item.push(thing);
+console.log('Registered user with id :'+socket.id+' and username '+data);
 });
 socket.on('package',function(data){
 console.log(data);
