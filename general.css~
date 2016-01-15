@@ -15,8 +15,8 @@ font-family: "Segoe UI light",Arial,serif;
 /* font-size: 15px; */
 text-align: center;
 margin: 5%;
-
-font-size: 1.5em;
+text-shadow: 1px 1px 1px steelblue;
+font-size: 1em;
 }
 #logo
 {

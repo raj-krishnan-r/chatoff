@@ -46,6 +46,13 @@
                             document.getElementById('talk').innerHTML='wait a moment...';
                             socket.emit('CreateAccData',exportArray);
     }
+    function goTo(file)
+    {
+        window.location.href=file;
+    }
+    socket.on('goto',function(data){
+        goTo(data);
+    });
     socket.on('CreateAccData',function(msg){
         if(msg=='done')
         {
@@ -96,6 +103,5 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
-        
     </body>
 </html>

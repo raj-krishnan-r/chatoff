@@ -1,6 +1,6 @@
 {
 "name":"notesLive","version ":"0.0.0","description" : "Live Out of Notes",
-"dependencies":{"socket.io":"latest","express":"latest","mysql":"latest"},"author":"raj krishnan r","scripts": {
+"dependencies":{"socket.io":"latest","express":"latest"},"author":"raj krishnan r","scripts": {
   "start": "node app.js"
 },
 "main": "app.js"
