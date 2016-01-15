@@ -1,6 +1,7 @@
 var app = require('http').createServer(handler);
 var io = require('socket.io')(app);
 var fs = require('fs');
+var url = require('url');
 
 app.listen(8080,function()
 	{console.log('Server Up at port 8080');}
@@ -25,11 +26,16 @@ Declaration of handler function
 */
 function handler(req,res)
 {
-fs.readFile(__dirname+'/index.html',function(err,data)
+var forwardFile = __dirname+url.parse(req.url).path;	
+if(url.parse(req.url).path=='/')
+forwardFile=__dirname+'/index.html';
+fs.readFile(forwardFile,function(err,data)
+//fs.readFile(__dirname+'/index.html',function(err,data)
 {
+
 if(err){
-res.writeHead(500);
-return res.end('Error loading index.html');
+res.writeHead(404);
+return res.end('Request page is not found.');
 }
 res.writeHead(200);
 res.end(data);

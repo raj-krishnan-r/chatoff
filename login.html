@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>goBingo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/skeleton.css">
+        <link href="general.css" rel="stylesheet"/>
+                <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+                <style>
+                    table caption
+                    {
+                        color: black;
+                        opacity: .5;
+                       
+                    }
+                    body{
+                        background: honeydew;
+                    }
+                </style>
+    </head>
+    
+    
+    <body>
+                    <script src = "/socket.io/socket.io.js"></script>
+                    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+                    <script>  var socket = io();
+                        
+                        
+                                                function accLogin()
+                        {
+                            var exportArray = Array();
+                            exportArray.push(document.getElementById('email').value);
+                            exportArray.push(document.getElementById('password').value);
+                            document.getElementById('talk').innerHTML='wait a moment...';
+                            socket.emit('checkAcc',exportArray);
+    }
+                        function createAcc()
+                        {
+                            var exportArray = Array();
+                            exportArray.push(document.getElementById('uname').value);
+                            exportArray.push(document.getElementById('uemail').value);
+                            exportArray.push(document.getElementById('upassword').value);
+                            document.getElementById('talk').innerHTML='wait a moment...';
+                            socket.emit('CreateAccData',exportArray);
+    }
+    socket.on('CreateAccData',function(msg){
+        if(msg=='done')
+        {
+                                        document.getElementById('talk').innerHTML='Fine, account is successfully created... Login now';
+                                        document.getElementById('email').value=document.getElementById('uemail').value;
+                                        document.getElementById('password').value=document.getElementById('upassword').value;
+                                          document.getElementById('loginButton').style.background='khaki';
+
+
+        }
+        else
+        {
+                                                    document.getElementById('talk').innerHTML='Some Error, sorry :(';
+
+        }
+});
+    socket.on('AccExistence',function(msg){
+        if(msg)
+        {
+                                        document.getElementById('talk').innerHTML='hang in there, ur account is loading...';
+                                       // window.location.href='home.html';
+                                        console.log(socket.username);
+        }
+        else
+        {
+                                                    document.getElementById('talk').innerHTML='Can\'t login, r u sure about the Email and Password, verify and try again.';
+
+        }
+});
+                    </script><div id="logo">
+                        <h2 align="center">B'ngo</h2></div><div align='center' id="getIn">
+            <table ><tr><td><form method="post" id="createAcc">
+                            <table><caption>Sign-up</caption><tr><td> 
+                                <input type='text' name="uname" placeholder="Name" id='uname'/></td></tr><tr>
+                                <td><input type="email" name="uemail" placeholder='Email' id='uemail'/></td></tr><tr>
+                                <td><input type='password' name="upassword" placeholder="Choose a password" id='upassword'></td></tr><tr>
+                                    <td align='center'><input onclick="createAcc();" style='width: 100%;' value='Create Account' type='button'/></td></tr>
+
+            </table></form><td valign='top'><table><caption>Login</caption><tr><td>
+                    <input type="email" name="email" placeholder='Email' id='email'/></td><tr><td>
+                                <input id="password" type='password' name="password" placeholder="Choose a password" ></td></tr><tr>
+                                <td><input onclick="accLogin();"  id="loginButton"  style='width: 100%'  value='log In' type='button'/></td></tr></table>
+
+                </td></tr></table>
+        </div>
+        <div id="talk"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+        
+    </body>
+</html>
