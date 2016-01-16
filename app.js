@@ -21,10 +21,11 @@ var connection = mysql.createConnection({
 connection.connect();
 //Rooms Objects
 var item= Array();
-var people = function(id,username)
+var people = function(id,username,name)
 {
   this.id = id;
   this.username=username;
+  this.name=name;
 };
 
 //Multiplexing
@@ -110,7 +111,8 @@ socket.on('CreateAccData',function(msg)
               socket.username=r[0].id;
                console.log(socket.username);
              socket.emit('AccExistence',true);
-			   socket.emit('goto','landing.html');
+             socket.emit('goto','landing.html');
+
 			   }
            else
                socket.emit('AccExistence',false);

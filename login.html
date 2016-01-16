@@ -25,7 +25,7 @@
     <body>
                     <script src = "/socket.io/socket.io.js"></script>
                     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-
+                    <script src="js/notey.js"></script>
                     <script>  var socket = io();
                         
                         
@@ -46,12 +46,12 @@
                             document.getElementById('talk').innerHTML='wait a moment...';
                             socket.emit('CreateAccData',exportArray);
     }
-    function goTo(file)
-    {
-        window.location.href=file;
-    }
+
     socket.on('goto',function(data){
-        goTo(data);
+       notey.get(data,function(data){
+document.getElementById('getIn').innerHTML=data.responseText;
+document.getElementById('talk').innerHTML=" ";
+       });
     });
     socket.on('CreateAccData',function(msg){
         if(msg=='done')
