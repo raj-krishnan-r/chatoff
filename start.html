@@ -26,6 +26,7 @@
                     <script src = "/socket.io/socket.io.js"></script>
                     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
                     <script src="js/notey.js"></script>
+                    <script src="js/all.js"></script>
                     <script>  var socket = io();
                         
                         
@@ -66,7 +67,6 @@ document.getElementById('talk').innerHTML=" ";
         else
         {
                                                     document.getElementById('talk').innerHTML='Some Error, sorry :(';
-
         }
 });
     socket.on('AccExistence',function(msg){
@@ -74,13 +74,22 @@ document.getElementById('talk').innerHTML=" ";
         {
                                         document.getElementById('talk').innerHTML='hang in there, ur account is loading...';
                                        // window.location.href='home.html';
-                                        console.log(socket.username);
         }
         else
         {
                                                     document.getElementById('talk').innerHTML='Can\'t login, r u sure about the Email and Password, verify and try again.';
 
         }
+});
+socket.on('activePeople',function(data){
+if(data!=null)
+{
+    console.log(data);
+    if(JSON.parse(data).id!=0)
+    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found, <b>"+JSON.parse(data).email+"</b>, <span onclick=\"playWith("+JSON.parse(data).id+");\">click to connect.</span></h5>";
+    else
+    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found nobody like that !!!, try again.</h5>";
+}
 });
                     </script><div id="logo">
                         <h2 align="center">B'ngo</h2></div><div align='center' id="getIn">
@@ -92,8 +101,8 @@ document.getElementById('talk').innerHTML=" ";
                                     <td align='center'><input onclick="createAcc();" style='width: 100%;' value='Create Account' type='button'/></td></tr>
 
             </table></form><td valign='top'><table><caption>Login</caption><tr><td>
-                    <input type="email" name="email" placeholder='Email' id='email'/></td><tr><td>
-                                <input id="password" type='password' name="password" placeholder="Choose a password" ></td></tr><tr>
+                    <input type="email" value="demo@email.com" name="email" placeholder='Email' id='email'/></td><tr><td>
+                                <input id="password" value="123456" type='password' name="password" placeholder="Choose a password" ></td></tr><tr>
                                 <td><input onclick="accLogin();"  id="loginButton"  style='width: 100%'  value='log In' type='button'/></td></tr></table>
 
                 </td></tr></table>

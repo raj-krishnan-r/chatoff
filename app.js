@@ -21,10 +21,10 @@ var connection = mysql.createConnection({
 connection.connect();
 //Rooms Objects
 var item= Array();
-var people = function(id,username,name)
+var people = function(id,email,name)
 {
   this.id = id;
-  this.username=username;
+  this.email=email;
   this.name=name;
 };
 
@@ -41,7 +41,7 @@ function handler(req,res)
 {
 var forwardFile = __dirname+url.parse(req.url).path;	
 if(url.parse(req.url).path=='/')
-forwardFile=__dirname+'/index.html';
+forwardFile=__dirname+'/start.html';
 fs.readFile(forwardFile,function(err,data)
 //fs.readFile(__dirname+'/index.html',function(err,data)
 {
@@ -58,18 +58,14 @@ res.end(data);
 io.on('connection',function(socket){
 console.log('Client Connected');
 socket.on('msg',function(data){
-
-	//console.log(data.rid+' : '+data.msg);
 	io.to(data.rid).emit('incoming',data.msg);
 });
 socket.on('username',function(data){
-//console.log('Up and Running');
 var thing = new people(socket.id,data);
 item.push(thing);
 console.log('Registered user with id :'+socket.id+' and username '+data);
 });
 socket.on('package',function(data){
-console.log(data);
 var len = item.length;
 for(var j = 0;j<len;j++)
 console.log(item[j].id+' : '+item[j].username);
@@ -108,8 +104,10 @@ socket.on('CreateAccData',function(msg)
            else
            {
                if(r.length==1){
+                   var thing = new people(socket.id,r[0].email);
+item.push(thing);
+console.log('Registered user with id :'+socket.id+' and email '+r[0].email);
               socket.username=r[0].id;
-               console.log(socket.username);
              socket.emit('AccExistence',true);
              socket.emit('goto','landing.html');
 
@@ -121,5 +119,23 @@ socket.on('CreateAccData',function(msg)
         });
 
 });
+socket.on('find',function(data){
 
+var index=0;
+var flag=0;
+while(item[index]!=null)
+{
+    if(item[index].email==data)
+    {
+        var template = '{"id":"'+item[index].id+'","email":"'+item[index].email+'" }';
+        socket.emit('activePeople',template);
+        flag=1;
+        return;
+    }
+    index++;
+}
+if(!flag){
+         var template = '{"id":0}';
+        socket.emit('activePeople',template);}
+});
 });
