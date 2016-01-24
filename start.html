@@ -18,6 +18,10 @@
                     body{
                         background: honeydew;
                     }
+                    #getIn
+                    {
+                    width:100vw;    
+                    }
                 </style>
     </head>
     
@@ -86,9 +90,9 @@ if(data!=null)
 {
     console.log(data);
     if(JSON.parse(data).id!=0)
-    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;font-family: \"Segoe UI light\",Arial,serif;\">We've found, <b>"+JSON.parse(data).email+"</b>, <span onclick=\"playWith('"+JSON.parse(data).id+"');\">click to connect.</span></h5>";
+    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found, <b>"+JSON.parse(data).email+"</b>, <span onclick=\"playWith('"+JSON.parse(data).id+"');\">click to connect.</span></h5>";
     else
-    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;font-family: \"Segoe UI light\",Arial,serif;\">We've found nobody like that !!!, try again.</h5>";
+    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found nobody like that active now, try again.</h5>";
 }
 });
                     </script><div id="logo">
@@ -108,6 +112,7 @@ if(data!=null)
                 </td></tr></table>
         </div>
         <div id="talk"></div>
+        <div id="activity"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
