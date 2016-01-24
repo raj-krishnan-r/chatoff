@@ -56,6 +56,20 @@ res.end(data);
 }
 
 io.on('connection',function(socket){
+    socket.on('disconnect',function(socket){
+var index=0;
+var flag=0;
+while(item[index]!=null)
+{
+    if(item[index].id==socket.id)
+    {
+        item[index].id='';
+       item[index].name='';
+    }
+    index++;
+}
+
+});
 console.log('Client Connected');
 socket.on('msg',function(data){
 	io.to(data.rid).emit('incoming',data.msg);
@@ -137,5 +151,9 @@ while(item[index]!=null)
 if(!flag){
          var template = '{"id":0}';
         socket.emit('activePeople',template);}
+});
+socket.on('outgoingRequest',function(data){
+    
+   	io.to(data).emit('incomingRequest','req');
 });
 });

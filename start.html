@@ -95,6 +95,10 @@ if(data!=null)
     $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found nobody like that active now, try again.</h5>";
 }
 });
+socket.on('incomingRequest',function(data){
+    alert('data');
+$id('notification').innerHTML="1 request from "+data;
+});
                     </script><div id="logo">
                         <h2 align="center">B'ngo</h2></div><div align='center' id="getIn">
             <table ><tr><td><form method="post" id="createAcc">
@@ -112,6 +116,7 @@ if(data!=null)
                 </td></tr></table>
         </div>
         <div id="talk"></div>
+                <div id="notification" style="background:red;"></div>
         <div id="activity"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>

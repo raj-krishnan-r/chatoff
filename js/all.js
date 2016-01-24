@@ -16,4 +16,5 @@ else
 function playWith(id)
 {
 	$id('results').innerHTML="connecting with "+id+"...";
+	socket.emit('outgoingRequest',id);
 }
