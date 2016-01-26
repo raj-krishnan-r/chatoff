@@ -90,14 +90,31 @@ if(data!=null)
 {
     console.log(data);
     if(JSON.parse(data).id!=0)
-    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found, <b>"+JSON.parse(data).email+"</b>, <span onclick=\"playWith('"+JSON.parse(data).id+"');\">click to connect.</span></h5>";
+    $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found, <b>"+JSON.parse(data).name+"</b>("+JSON.parse(data).email+"), <span onclick=\"playWith('"+JSON.parse(data).id+"','"+JSON.parse(data).name+"');\"><span style=\"cursor:pointer;\">click to connect.</span></h5>";
     else
     $id('results').innerHTML="<h5 style=\"color: cornflowerblue;\">We've found nobody like that active now, try again.</h5>";
 }
 });
 socket.on('incomingRequest',function(data){
-    alert('data');
-$id('notification').innerHTML="1 request from "+data;
+    console.log(data);
+data = JSON.parse(data);
+$id('notification').innerHTML+="1 request from "+data.rid+" <span style=\"cursor:pointer;\"  data-rid = \""+data.socketid+"\" data-id=\""+data.rid +"\" onclick=\"responseRequest(this);\">click to accept</span>";
+});
+socket.on('acceptRequest',function(data){
+   console.log(data); 
+   acceptRequest(data);
+   
+});
+socket.on('incomingMsg',function(data){
+
+    data=JSON.parse(data);
+
+    
+ var msg = document.createElement('div');
+		msg.setAttribute('class','other');
+		msg.innerHTML=data.message;
+		 $id(data.senderid).appendChild(msg);
+         		$id(data.senderid).scrollTop=$id(data.senderid).scrollHeight;
 });
                     </script><div id="logo">
                         <h2 align="center">B'ngo</h2></div><div align='center' id="getIn">
@@ -119,15 +136,7 @@ $id('notification').innerHTML="1 request from "+data;
                 <div id="notification"></div>
         <div id="activity"></div>
         <div id="chatRack">
-            <div>
-                Messages...
-            </div>
-               <div>
-                Messages...
-            </div>
-               <div>
-                Messages...
-            </div>
+  <div>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.3.min.js"><\/script>')</script>

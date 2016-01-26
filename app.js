@@ -56,19 +56,25 @@ res.end(data);
 }
 
 io.on('connection',function(socket){
-    socket.on('disconnect',function(socket){
+    var socketId=socket.id;
+socket.on('disconnect',function(socket){
 var index=0;
 var flag=0;
 while(item[index]!=null)
 {
-    if(item[index].id==socket.id)
-    {
-        item[index].id='';
-       item[index].name='';
-    }
+   if(item[index].id==socketId){
+  var stone = index;
+  var sea = stone+1;
+  while(item[sea]!=null)
+  {
+      item[stone]=item[sea];
+      sea++;
+  }
+  item.pop();
+   }
     index++;
+   
 }
-
 });
 console.log('Client Connected');
 socket.on('msg',function(data){
@@ -78,12 +84,13 @@ socket.on('username',function(data){
 var thing = new people(socket.id,data);
 item.push(thing);
 console.log('Registered user with id :'+socket.id+' and username '+data);
+
 });
-socket.on('package',function(data){
+/*socket.on('package',function(data){
 var len = item.length;
 for(var j = 0;j<len;j++)
 console.log(item[j].id+' : '+item[j].username);
-});
+});*/
 
 //Code for account Creation
 socket.on('CreateAccData',function(msg)
@@ -118,9 +125,14 @@ socket.on('CreateAccData',function(msg)
            else
            {
                if(r.length==1){
-                   var thing = new people(socket.id,r[0].email);
+               var thing = new people(socket.id,r[0].email,r[0].name);
 item.push(thing);
 console.log('Registered user with id :'+socket.id+' and email '+r[0].email);
+console.log('USerList');
+var len = item.length;
+for(var j = 0;j<len;j++)
+//console.log(item[j].id+' : '+item[j].username);
+
               socket.username=r[0].id;
              socket.emit('AccExistence',true);
              socket.emit('goto','landing.html');
@@ -128,20 +140,19 @@ console.log('Registered user with id :'+socket.id+' and email '+r[0].email);
 			   }
            else
                socket.emit('AccExistence',false);
-
            }
         });
 
 });
 socket.on('find',function(data){
-
 var index=0;
 var flag=0;
 while(item[index]!=null)
 {
     if(item[index].email==data)
     {
-        var template = '{"id":"'+item[index].id+'","email":"'+item[index].email+'" }';
+
+        var template = '{"id":"'+item[index].id+'","email":"'+item[index].email+'","name":"'+item[index].name+'" }';
         socket.emit('activePeople',template);
         flag=1;
         return;
@@ -153,7 +164,21 @@ if(!flag){
         socket.emit('activePeople',template);}
 });
 socket.on('outgoingRequest',function(data){
-    
-   	io.to(data).emit('incomingRequest','req');
+    var orginal = data;
+    data=JSON.parse(data);
+    console.log('Request to '+data.rid);
+   	io.to(data.rid).emit('incomingRequest',orginal);
+});
+socket.on('yesChat',function(data){
+    console.log('Accepted : '+data);
+    data=JSON.parse(data);
+    console.log(data.rid);
+    io.to(data.rid).emit('acceptRequest',data);
+});
+socket.on('transferMsg',function(data){
+    console.log(data);
+    var copy = JSON.parse(data);
+    console.log('Forwarding to '+copy.rid);
+    io.to(copy.rid).emit('incomingMsg',data);
 });
 });
