@@ -85,6 +85,10 @@ document.getElementById('talk').innerHTML=" ";
 
         }
 });
+socket.on('userInfoTransfer',function(data){
+data=JSON.parse(data);
+$id('username').innerHTML=data.name;
+});
 socket.on('activePeople',function(data){
 if(data!=null)
 {
@@ -96,25 +100,36 @@ if(data!=null)
 }
 });
 socket.on('incomingRequest',function(data){
-    console.log(data);
 data = JSON.parse(data);
-$id('notification').innerHTML+="1 request from "+data.rid+" <span style=\"cursor:pointer;\"  data-rid = \""+data.socketid+"\" data-id=\""+data.rid +"\" onclick=\"responseRequest(this);\">click to accept</span>";
+//$id('notification').innerHTML+="Request from "+data.myname+" <span style=\"cursor:pointer;\"   data-name = \""+data.myname+"\"  data-rid = \""+data.socketid+"\" data-id=\""+data.rid +"\" onclick=\"responseRequest(this);\">click to accept</span> OR  <span style=\"cursor:pointer;\"   data-rid = \""+data.socketid+"\" data-id=\""+data.rid +"\"  onclick=\"cancelRequest(this)\">click to cancel</span>";
+var span = document.createElement('span');
+span.innerHTML="Request from <b>"+data.myname+"</b>, <span style=\"cursor:pointer; color: darkcyan; \"   data-name = \""+data.myname+"\"  data-rid = \""+data.socketid+"\" data-id=\""+data.rid +"\" onclick=\"responseRequest(this);\">click to accept</span> OR  <span style=\"cursor:pointer; color: rgb(234, 39, 39);\"   data-rid = \""+data.socketid+"\" data-id=\""+data.rid +"\"  onclick=\"cancelRequest(this)\">click to cancel</span>";
+$id('notification').appendChild(span);
 });
 socket.on('acceptRequest',function(data){
-   console.log(data); 
    acceptRequest(data);
    
+});
+socket.on('cancelRequest',function(data){
+    //data=JSON.parse(data);
+    $id('request-'+data.socketid).innerHTML="Busy now...";
 });
 socket.on('incomingMsg',function(data){
 
     data=JSON.parse(data);
 
-    
+    $id('status-'+data.senderid).innerHTML="";
  var msg = document.createElement('div');
 		msg.setAttribute('class','other');
 		msg.innerHTML=data.message;
 		 $id(data.senderid).appendChild(msg);
-         		$id(data.senderid).scrollTop=$id(data.senderid).scrollHeight;
+         $id(data.senderid).scrollTop=$id(data.senderid).scrollHeight;
+});
+
+socket.on('typing',function(data){
+    data=JSON.parse(data);
+    console.log(data.senderid);
+$id('status-'+data.senderid).innerHTML="typing...";
 });
                     </script><div id="logo">
                         <h2 align="center">B'ngo</h2></div><div align='center' id="getIn">
@@ -132,8 +147,9 @@ socket.on('incomingMsg',function(data){
 
                 </td></tr></table>
         </div>
-        <div id="talk"></div>
+
                 <div id="notification"></div>
+                        <div id="talk"></div>
         <div id="activity"></div>
         <div id="chatRack">
   <div>
@@ -143,4 +159,5 @@ socket.on('incomingMsg',function(data){
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
     </body>
+    <div id=username></div>
 </html>

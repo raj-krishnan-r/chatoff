@@ -28,12 +28,7 @@ var people = function(id,email,name)
   this.name=name;
 };
 
-//Multiplexing
-var nsp = io.of('/my');
-nsp.on('connection',function(scoket){
-	console.log('my route');
-});
-nsp.emit('hello','emyt');
+
 /*
 Declaration of handler function
 */
@@ -77,20 +72,6 @@ while(item[index]!=null)
 }
 });
 console.log('Client Connected');
-socket.on('msg',function(data){
-	io.to(data.rid).emit('incoming',data.msg);
-});
-socket.on('username',function(data){
-var thing = new people(socket.id,data);
-item.push(thing);
-console.log('Registered user with id :'+socket.id+' and username '+data);
-
-});
-/*socket.on('package',function(data){
-var len = item.length;
-for(var j = 0;j<len;j++)
-console.log(item[j].id+' : '+item[j].username);
-});*/
 
 //Code for account Creation
 socket.on('CreateAccData',function(msg)
@@ -127,14 +108,12 @@ socket.on('CreateAccData',function(msg)
                if(r.length==1){
                var thing = new people(socket.id,r[0].email,r[0].name);
 item.push(thing);
-console.log('Registered user with id :'+socket.id+' and email '+r[0].email);
-console.log('USerList');
-var len = item.length;
-for(var j = 0;j<len;j++)
-//console.log(item[j].id+' : '+item[j].username);
 
+
+        var template = '{"socketid":"'+socket.id+'","email":"'+r[0].email+'","name":"'+r[0].name+'" }';
               socket.username=r[0].id;
              socket.emit('AccExistence',true);
+             socket.emit('userInfoTransfer',template);
              socket.emit('goto','landing.html');
 
 			   }
@@ -166,19 +145,25 @@ if(!flag){
 socket.on('outgoingRequest',function(data){
     var orginal = data;
     data=JSON.parse(data);
-    console.log('Request to '+data.rid);
    	io.to(data.rid).emit('incomingRequest',orginal);
 });
 socket.on('yesChat',function(data){
-    console.log('Accepted : '+data);
     data=JSON.parse(data);
-    console.log(data.rid);
     io.to(data.rid).emit('acceptRequest',data);
 });
+
+socket.on('noChat',function(data){
+    data=JSON.parse(data);
+    io.to(data.rid).emit('cancelRequest',data);
+});
 socket.on('transferMsg',function(data){
-    console.log(data);
     var copy = JSON.parse(data);
-    console.log('Forwarding to '+copy.rid);
     io.to(copy.rid).emit('incomingMsg',data);
 });
+
+socket.on('typing',function(data){
+    var copy = JSON.parse(data);
+    io.to(copy.rid).emit('typing',data);
+});
+
 });
