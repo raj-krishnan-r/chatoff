@@ -3,8 +3,10 @@ var io = require('socket.io')(app);
 var fs = require('fs');
 var url = require('url');
 var mysql = require('mysql');
+var port =process.env.OPENSHIFT_NODEJS_PORT || 8080
+var ip =process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
-app.listen(8080,function()
+app.listen(ip,port,function()
 	{console.log('Server Up at port 8080');}
 		);
 
